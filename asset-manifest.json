@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/sarthakgupta878/user-table/static/css/main.073c9b0a.css",
+    "main.js": "/sarthakgupta878/user-table/static/js/main.2c9e8bc0.js",
+    "static/js/787.6d0d8630.chunk.js": "/sarthakgupta878/user-table/static/js/787.6d0d8630.chunk.js",
+    "index.html": "/sarthakgupta878/user-table/index.html",
+    "main.073c9b0a.css.map": "/sarthakgupta878/user-table/static/css/main.073c9b0a.css.map",
+    "main.2c9e8bc0.js.map": "/sarthakgupta878/user-table/static/js/main.2c9e8bc0.js.map",
+    "787.6d0d8630.chunk.js.map": "/sarthakgupta878/user-table/static/js/787.6d0d8630.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.2c9e8bc0.js"
+  ]
+}
