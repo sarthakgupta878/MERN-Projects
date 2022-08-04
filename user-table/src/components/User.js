@@ -1,53 +1,62 @@
-import React, { useState, useEffect ,useRef} from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import Useritem from './Useritem';
+import userContext from '../context/user/userContext';
 // console.log("hi")
 
 
 
 const User = (props) => {
-    const [user, setUser] = useState({name: "",username: "",email: "",phone:"",website:""});
-    const ref = useRef(null);
-    const refClose = useRef(null);
-    const [data, setData] = useState([]);
-    const getuser = async () => {
-        const url = `https://jsonplaceholder.typicode.com/users`;
-        let data = await fetch(url);
-        let parsedData = await data.json();
-        console.log(parsedData);
-        setData(parsedData)
-    }
-    useEffect(() => {
-        getuser();
+  const [user, setUser] = useState({ name: "", username: "", email: "", phone: "", website: "" });
+  const context = useContext(userContext);
+  const { users, getUser, addUser } = context;
+  const ref = useRef(null);
+  const refClose = useRef(null);
 
-        // eslint-disable-next-line
-    }, [])
+  useEffect(() => {
+    getUser();
 
-    const createUser = (e) =>{  
-        e.preventDefault();
-        ref.current.click()
-        // props.showAlert("Updated Successfully","success")
-    
-      }
+    // eslint-disable-next-line
+  }, [])
 
-      const handleClick = (e) =>{
-        // console.log("updating")
-        // editNote(note.id,note.etitle,note.edescription,note.etag);
-        refClose.current.click();
-        console.log(props)
-        props.showAlert("User is added successfully","success")
-    
-      }
+  const createUser = (e) => {
+    e.preventDefault();
+    ref.current.click()
+    // props.showAlert("Updated Successfully","success")
 
-      const onChange = (e) =>{
-        setUser({...user,[e.target.name]:e.target.value})
-        // console.log(note)
-      }
+  }
 
-    return (
+  const handleClick = (e) => {
+    // console.log("updating")
+    // console.log(user.name);
 
-        <>
+    addUser(user);
+    refClose.current.click();
 
-        <button type="button" className="btn btn-primary d-none" ref={ref} data-bs-toggle="modal" data-bs-target="#exampleModal">
+    props.showAlert("User is added successfully", "success")
+
+  }
+
+  const onChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value })
+    // console.log(note)
+  }
+  const validateEmail = (email) => {
+
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+
+
+
+  return (
+
+    <>
+
+      <button type="button" className="btn btn-primary d-none" ref={ref} data-bs-toggle="modal" data-bs-target="#exampleModal">
       </button>
       <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog">
@@ -72,7 +81,7 @@ const User = (props) => {
                 </div>
                 <div className="mb-3">
                   <label htmlFor="phone" className="form-label">Phone No.</label>
-                  <input type="text" className="form-control" name='phone' value={user.phone} onChange={onChange} id="phone" />
+                  <input type="number" className="form-control" name='phone' value={user.phone} onChange={onChange} id="phone" />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="website" className="form-label">Website</label>
@@ -82,43 +91,43 @@ const User = (props) => {
             </div>
             <div className="modal-footer">
               <button type="button" ref={refClose} className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" disabled={user.name.length<3 || user.username.length <5 ||user.website.length<7} onClick={handleClick} className="btn btn-primary">Create Note</button>
+              <button type="button" disabled={user.name.length < 3 || user.username.length < 5 || (user.website.length < 5 && user.website.includes("www.")) || user.phone.length !== 10 || !(validateEmail(user.email)) } onClick={handleClick} className="btn btn-primary">Create User</button>
             </div>
           </div>
         </div>
-      </div>    
+      </div>
 
 
-            <h1 style={{ margin: "15px"  }} className="text-center">User Table </h1>
-            <div className="container">
+      <h1 style={{ margin: "15px" }} className="text-center">User Table </h1>
+      <div className="container">
 
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Phone no.</th>
-                            <th scope="col">Website</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            data.map((element) => {
-                                return <Useritem key={element.id} name={element.name} username={element.username} email={element.email} phone={element.phone} website={element.website} />
-                            })
-                        }
-                    </tbody>
-
-
-                </table>
-                <button  type="submit" className="btn btn-primary" onClick={createUser}>Create User</button>
-            </div>
-        </>
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Username</th>
+              <th scope="col">Email</th>
+              <th scope="col">Phone no.</th>
+              <th scope="col">Website</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              users.map((element) => {
+                return <Useritem user={element.id} key={element.id} name={element.name} username={element.username} email={element.email} phone={element.phone} website={element.website} showAlert={props.showAlert} />
+              })
+            }
+          </tbody>
 
 
-    )
+        </table>
+        <button type="submit" className="btn btn-primary" onClick={createUser}>Create User</button>
+      </div>
+    </>
+
+
+  )
 }
 
 export default User
